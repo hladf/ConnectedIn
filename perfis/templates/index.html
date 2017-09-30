@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>TODOS OS PERFIS</strong>
+        </div>
+        <h1>Bem vindo! index</h1>
+        {%if perfis%}
+        <ul>
+            {% for p in perfis %}
+            <a href="{% url 'exibir' p.id %}">
+                <li>Nome: {{p.nome}} <br>Tel.: {{p.telefone}} <br>Email:{{p.email}}</li>
+            </a>
+            {%endfor%}
+        </ul>
+        {% else %}
+            <p>NENHUM PERFIL ENCONTRADO!</p>
+        {% endif %}
+    </div>
+    <div class="panel panel-default">
+        {% with total_cv=perfil_logado.convites_recebidos.count %}
+            <div class="panel-heading">
+                <strong>Você tem {{ total_cv }} convite{{ total_cv | pluralize }} aguardando aprovação</strong>
+                
+            </div>
+            {% if total_cv %}
+            <ul class="list-group">
+                {% for con in perfil_logado.convites_recebidos.all %}
+                    <li class="list-group-item">
+                        {{con.solicitante.nome}}
+                        <a href="{% url 'aceitar' con.id %}" class="pull-right">ACEITAR</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <div class="panel-body">
+                    <p>Nenhum convite recebido!</p>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="panel panel-default">
+        {% with total_contatos=perfil_logado.contatos.count %}
+            {% if total_contatos %}
+            <div class="panel-heading">
+                <strong>Você tem {{ total_contatos }} contato{{ total_contatos | pluralize }} </strong>
+
+            </div>
+            <ul class="list-group">
+                {% for con in perfil_logado.contatos.all %}
+                    <li class="list-group-item">
+                        <a href="{% url 'exibir' con.id %}">{{con.nome}}</a>
+                        <!-- <button type="button" class="btn btn-success">ACEITAR</button> -->
+                    </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+                <div class="panel-body">
+                    <p>Nenhum contato no momento!</p>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+{% endblock %}
